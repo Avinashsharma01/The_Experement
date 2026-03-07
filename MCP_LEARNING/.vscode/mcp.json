@@ -1,0 +1,16 @@
+{
+  "servers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/"
+    }
+  }
+}
+
+
+/*
+"What repos do I own?"
+"Show me the README of github/github-mcp-server"
+"List open issues in my repo <your‑repo‑name>"
+"Who am I on GitHub?" (tests the context toolset)
+*/
