@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Electron Starter</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- Header -->
+      <header class="header">
+        <div class="logo">⚡ Electron Starter</div>
+        <span class="badge">Desktop App</span>
+      </header>
+
+      <!-- Hero -->
+      <section class="hero">
+        <h1>Welcome to <span class="gradient-text">Electron JS</span></h1>
+        <p class="subtitle">
+          Your first desktop app — powered by Chromium, Node.js &amp; Electron.
+        </p>
+      </section>
+
+      <!-- System Info Cards -->
+      <section class="cards" id="info-cards">
+        <div class="card">
+          <div class="card-icon">⚛️</div>
+          <div class="card-label">Electron</div>
+          <div class="card-value" id="electron-ver">loading...</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🟢</div>
+          <div class="card-label">Node.js</div>
+          <div class="card-value" id="node-ver">loading...</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌐</div>
+          <div class="card-label">Chromium</div>
+          <div class="card-value" id="chrome-ver">loading...</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">💻</div>
+          <div class="card-label">Platform</div>
+          <div class="card-value" id="platform-info">loading...</div>
+        </div>
+      </section>
+
+      <!-- Interactive Section -->
+      <section class="interactive">
+        <h2>Try IPC Communication</h2>
+        <p>Send a message from the <strong>Renderer</strong> process to the <strong>Main</strong> process:</p>
+        <div class="input-group">
+          <input
+            type="text"
+            id="msg-input"
+            placeholder="Type a message..."
+            maxlength="200"
+          />
+          <button id="send-btn">Send to Main</button>
+        </div>
+        <div class="response" id="response-box"></div>
+      </section>
+
+      <!-- Counter Demo -->
+      <section class="counter-section">
+        <h2>Simple Counter</h2>
+        <p>A basic state demo — no frameworks needed.</p>
+        <div class="counter">
+          <button class="counter-btn" id="dec-btn">−</button>
+          <span class="counter-value" id="counter">0</span>
+          <button class="counter-btn" id="inc-btn">+</button>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p>Built with ❤️ using Electron JS &bull; MERN Dev Edition</p>
+      </footer>
+    </div>
+
+    <script src="renderer.js"></script>
+  </body>
+</html>

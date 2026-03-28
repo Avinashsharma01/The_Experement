@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Debounce & Throttle</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fira+Code:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --purple: #6366f1;
+            --purple-light: #eef2ff;
+            --purple-border: #c7d2fe;
+            --cyan: #0ea5e9;
+            --cyan-light: #e0f2fe;
+            --cyan-border: #bae6fd;
+            --green: #10b981;
+            --red: #ef4444;
+            --yellow: #f59e0b;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --bg: #ffffff;
+            --surface: #f8fafc;
+        }
+
+        body {
+            background: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+        }
+
+        /* ── Phone Shell ── */
+        .phone {
+            width: 390px;
+            height: 844px;
+            background: var(--bg);
+            border-radius: 40px;
+            border: 1.5px solid #cbd5e1;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 24px 60px rgba(0, 0, 0, 0.14);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Gradient top accent */
+        .phone::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--purple), var(--cyan));
+            z-index: 10;
+        }
+
+        /* ── Header ── */
+        .header {
+            padding: 20px 20px 0;
+            background: #fff;
+            flex-shrink: 0;
+        }
+
+        .header-eyebrow {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--purple);
+            margin-bottom: 2px;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 900;
+            color: #0f172a;
+            line-height: 1.2;
+        }
+
+        /* ── Tabs ── */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            padding: 14px 20px 0;
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 0 12px;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: var(--muted);
+            border-bottom: 2.5px solid transparent;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+        }
+
+        .tab-btn.active.debounce {
+            color: var(--purple);
+            border-bottom-color: var(--purple);
+        }
+
+        .tab-btn.active.throttle {
+            color: var(--cyan);
+            border-bottom-color: var(--cyan);
+        }
+
+        .tab-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .tab-btn.debounce .tab-dot {
+            background: var(--purple);
+        }
+
+        .tab-btn.throttle .tab-dot {
+            background: var(--cyan);
+        }
+
+        .tab-btn:not(.active) .tab-dot {
+            background: #cbd5e1;
+        }
+
+        .tab-btn:not(.active) {
+            color: #94a3b8;
+        }
+
+        /* ── Screens ── */
+        .screen {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 16px 16px 20px;
+            gap: 12px;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        .screen::-webkit-scrollbar {
+            width: 0;
+        }
+
+        /* ── Concept Banner ── */
+        .concept-banner {
+            border-radius: 14px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .concept-banner.purple {
+            background: var(--purple-light);
+            border: 1px solid var(--purple-border);
+        }
+
+        .concept-banner.cyan {
+            background: var(--cyan-light);
+            border: 1px solid var(--cyan-border);
+        }
+
+        .concept-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .concept-body {}
+
+        .concept-name {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+
+        .concept-name.purple {
+            color: var(--purple);
+        }
+
+        .concept-name.cyan {
+            color: var(--cyan);
+        }
+
+        .concept-def {
+            font-size: 11px;
+            line-height: 1.5;
+            color: #374151;
+            font-style: italic;
+        }
+
+        /* ── Section Label ── */
+        .section-label {
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        /* ── Use Case Card ── */
+        .use-case {
+            background: #fff;
+            border: 1.5px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.15s;
+        }
+
+        .use-case:hover {
+            transform: translateY(-1px);
+        }
+
+        .uc-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .uc-emoji {
+            font-size: 18px;
+        }
+
+        .uc-title-group {}
+
+        .uc-title {
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .uc-subtitle {
+            font-size: 10px;
+            color: var(--muted);
+            margin-top: 1px;
+        }
+
+        .uc-badge {
+            margin-left: auto;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .uc-badge.purple {
+            background: var(--purple-light);
+            color: var(--purple);
+            border: 1px solid var(--purple-border);
+        }
+
+        .uc-badge.cyan {
+            background: var(--cyan-light);
+            color: var(--cyan);
+            border: 1px solid var(--cyan-border);
+        }
+
+        .uc-body {
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Interactive demo area */
+        .demo-area {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        /* Input */
+        .demo-input {
+            width: 100%;
+            background: #fff;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 9px 12px;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .demo-input:focus {
+            border-color: var(--purple);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+        }
+
+        .demo-input.cyan:focus {
+            border-color: var(--cyan);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+        }
+
+        /* Button */
+        .demo-btn {
+            width: 100%;
+            padding: 9px;
+            border: none;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .demo-btn.purple {
+            background: var(--purple);
+            color: #fff;
+        }
+
+        .demo-btn.purple:hover {
+            background: #4f46e5;
+        }
+
+        .demo-btn.purple:active {
+            transform: scale(0.98);
+        }
+
+        .demo-btn.cyan {
+            background: var(--cyan);
+            color: #fff;
+        }
+
+        .demo-btn.cyan:hover {
+            background: #0284c7;
+        }
+
+        .demo-btn.cyan:active {
+            transform: scale(0.98);
+        }
+
+        /* Progress bar */
+        .prog-bar {
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .prog-fill {
+            height: 100%;
+            border-radius: 99px;
+            width: 0%;
+            transition: width 0.05s linear;
+        }
+
+        .prog-fill.purple {
+            background: var(--purple);
+        }
+
+        .prog-fill.cyan {
+            background: var(--cyan);
+        }
+
+        /* Stats row */
+        .stats-row {
+            display: flex;
+            gap: 6px;
+        }
+
+        .stat-chip {
+            flex: 1;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 7px 8px;
+            text-align: center;
+        }
+
+        .stat-chip-num {
+            font-size: 20px;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .stat-chip-num.purple {
+            color: var(--purple);
+        }
+
+        .stat-chip-num.cyan {
+            color: var(--cyan);
+        }
+
+        .stat-chip-num.red {
+            color: var(--red);
+        }
+
+        .stat-chip-label {
+            font-size: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        /* Log */
+        .mini-log {
+            max-height: 70px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .mini-log::-webkit-scrollbar {
+            width: 0;
+        }
+
+        .log-pill {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 8px;
+            border-radius: 7px;
+            font-size: 9px;
+            font-family: 'Fira Code', monospace;
+            animation: fadeSlide 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateX(-6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .log-pill.purple {
+            background: var(--purple-light);
+            color: #4338ca;
+            border: 1px solid var(--purple-border);
+        }
+
+        .log-pill.cyan {
+            background: var(--cyan-light);
+            color: #0369a1;
+            border: 1px solid var(--cyan-border);
+        }
+
+        .log-pill.raw {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        /* Status badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .status-badge.idle {
+            background: #f8fafc;
+            color: var(--muted);
+            border: 1px solid var(--border);
+        }
+
+        .status-badge.active {
+            background: #dcfce7;
+            color: #16a34a;
+            border: 1px solid #86efac;
+        }
+
+        .status-badge.waiting {
+            background: var(--purple-light);
+            color: var(--purple);
+            border: 1px solid var(--purple-border);
+        }
+
+        .status-badge.blocked {
+            background: #fff7ed;
+            color: #ea580c;
+            border: 1px solid #fed7aa;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        /* Slider */
+        .demo-slider {
+            width: 100%;
+            accent-color: var(--cyan);
+            cursor: pointer;
+        }
+
+        /* Scroll sim */
+        .scroll-sim {
+            height: 60px;
+            background: linear-gradient(180deg, #e0f2fe 0%, #bae6fd 100%);
+            border-radius: 10px;
+            border: 1px solid var(--cyan-border);
+            overflow: hidden;
+            position: relative;
+            cursor: ns-resize;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+            color: #0369a1;
+            user-select: none;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--cyan);
+            top: 0;
+            transition: top 0.05s;
+        }
+
+        /* Resize sim */
+        .resize-sim {
+            height: 50px;
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border-radius: 10px;
+            border: 1px solid #86efac;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+            color: #15803d;
+            gap: 6px;
+            cursor: ew-resize;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Validation */
+        .validation-msg {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 5px 0;
+            min-height: 20px;
+            transition: all 0.3s;
+        }
+
+        .validation-msg.ok {
+            color: var(--green);
+        }
+
+        .validation-msg.error {
+            color: var(--red);
+        }
+
+        .validation-msg.check {
+            color: var(--yellow);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="phone">
+        <!-- Gradient top accent via ::before -->
+
+        <!-- Header -->
+        <div class="header">
+            <div class="header-eyebrow">JavaScript Concepts</div>
+            <div class="header-title">Debounc & Throttling</div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn debounce active" id="tabDebounce" onclick="switchTab('debounce')">
+                <span class="tab-dot"></span> Debouncing
+            </button>
+            <button class="tab-btn throttle" id="tabThrottle" onclick="switchTab('throttle')">
+                <span class="tab-dot"></span> Throttling
+            </button>
+        </div>
+
+        <!-- ══════════════ DEBOUNCE SCREEN ══════════════ -->
+        <div class="screen active" id="screenDebounce">
+
+            <!-- Concept banner -->
+            <div class="concept-banner purple">
+                <div class="concept-icon">⏳</div>
+                <div class="concept-body">
+                    <div class="concept-name purple">Debounce</div>
+                    <div class="concept-def">"Waits until the user <b>stops</b> triggering the event for a set delay,
+                        then fires <b>once</b>."</div>
+                </div>
+            </div>
+
+            <div class="section-label">📌 Reduce API Calls — Search Autocomplete</div>
+
+            <!-- Use Case: Search -->
+            <div class="use-case" id="uc-search">
+                <div class="uc-header">
+                    <div class="uc-emoji">🔍</div>
+                    <div class="uc-title-group">
+                        <div class="uc-title">Live Search API</div>
+                        <div class="uc-subtitle">Fires only after you stop typing (500ms)</div>
+                    </div>
+                    <div class="uc-badge purple">500ms delay</div>
+                </div>
+                <div class="uc-body">
+                    <div class="demo-area">
+                        <input class="demo-input" id="searchInput" type="text" placeholder="Search products..."
+                            autocomplete="off" spellcheck="false" oninput="onSearchInput(this.value)" />
+                        <div class="prog-bar">
+                            <div class="prog-fill purple" id="searchFill"></div>
+                        </div>
+                        <div class="stats-row">
+                            <div class="stat-chip">
+                                <div class="stat-chip-num red" id="searchRaw">0</div>
+                                <div class="stat-chip-label">Keystrokes</div>
+                            </div>
+                            <div class="stat-chip">
+                                <div class="stat-chip-num purple" id="searchCalls">0</div>
+                                <div class="stat-chip-label">API Calls</div>
+                            </div>
+                            <div class="stat-chip">
+                                <div class="stat-chip-num" style="color:var(--green);" id="searchSaved">0</div>
+                                <div class="stat-chip-label">Saved</div>
+                            </div>
+                        </div>
+                        <div class="mini-log" id="searchLog"></div>
+                    </div>
+                    <button class="demo-btn purple" onclick="resetSearch()">↺ Reset</button>
+                </div>
+            </div>
+
+        </div><!-- /screenDebounce -->
+
+        <!-- ══════════════ THROTTLE SCREEN ══════════════ -->
+        <div class="screen" id="screenThrottle">
+
+            <!-- Concept banner -->
+            <div class="concept-banner cyan">
+                <div class="concept-icon">⚡</div>
+                <div class="concept-body">
+                    <div class="concept-name cyan">Throttle</div>
+                    <div class="concept-def">"Fires at most <b>once per interval</b>, no matter how many times the event
+                        triggers."</div>
+                </div>
+            </div>
+
+            <div class="section-label">📌 Prevent Spam Clicks — Notification Button</div>
+
+            <!-- Use Case 2: Button Rate Limiting -->
+            <div class="use-case" id="uc-btn">
+                <div class="uc-header">
+                    <div class="uc-emoji">🔔</div>
+                    <div class="uc-title-group">
+                        <div class="uc-title">Notification Send Button</div>
+                        <div class="uc-subtitle">Prevents spam clicks — throttled to 1 per 2s</div>
+                    </div>
+                    <div class="uc-badge cyan">2s cooldown</div>
+                </div>
+                <div class="uc-body">
+                    <div class="demo-area">
+                        <button class="demo-btn cyan" id="notifyBtn" onclick="onNotifyClick()">
+                            <span id="notifyBtnIcon">🔔</span> Send Notification
+                        </button>
+                        <div class="prog-bar">
+                            <div class="prog-fill cyan" id="notifyFill"></div>
+                        </div>
+                        <div id="notifyStatus" class="status-badge idle">
+                            <span class="status-dot"></span> Ready to send
+                        </div>
+                        <div class="stats-row">
+                            <div class="stat-chip">
+                                <div class="stat-chip-num red" id="notifyRaw">0</div>
+                                <div class="stat-chip-label">Clicks</div>
+                            </div>
+                            <div class="stat-chip">
+                                <div class="stat-chip-num cyan" id="notifySent">0</div>
+                                <div class="stat-chip-label">Sent</div>
+                            </div>
+                            <div class="stat-chip">
+                                <div class="stat-chip-num" style="color:var(--yellow);" id="notifyBlocked">0</div>
+                                <div class="stat-chip-label">Blocked</div>
+                            </div>
+                        </div>
+                        <div class="mini-log" id="notifyLog"></div>
+                    </div>
+                    <button class="demo-btn cyan" onclick="resetNotify()">↺ Reset</button>
+                </div>
+            </div>
+
+        </div><!-- /screenThrottle -->
+
+    </div><!-- /phone -->
+
+    <script>
+
+        /* ═══════════════════════════════════════════
+           HELPERS
+        ═══════════════════════════════════════════ */
+        function ts() {
+            const d = new Date();
+            return d.toLocaleTimeString('en', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })
+                + '.' + String(d.getMilliseconds()).padStart(3, '0').slice(0, 2);
+        }
+
+        function addLogPill(logEl, cls, icon, text) {
+            const pill = document.createElement('div');
+            pill.className = `log-pill ${cls}`;
+            pill.innerHTML = `<span>${icon}</span><span>${text}</span>`;
+            logEl.prepend(pill);
+            while (logEl.children.length > 5) logEl.removeChild(logEl.lastChild);
+        }
+
+        function startProg(fillEl, durationMs, cls) {
+            if (fillEl._animId) cancelAnimationFrame(fillEl._animId);
+            const start = Date.now();
+            function frame() {
+                const pct = Math.min(((Date.now() - start) / durationMs) * 100, 100);
+                fillEl.style.width = pct + '%';
+                if (pct < 100) fillEl._animId = requestAnimationFrame(frame);
+                else fillEl._animId = null;
+            }
+            fillEl._animId = requestAnimationFrame(frame);
+        }
+
+        function resetProg(fillEl) {
+            if (fillEl._animId) cancelAnimationFrame(fillEl._animId);
+            fillEl.style.width = '0%';
+        }
+
+        /* ════════════════════════════════════════════
+           TAB SWITCH
+        ════════════════════════════════════════════ */
+        function switchTab(which) {
+            document.getElementById('tabDebounce').classList.toggle('active', which === 'debounce');
+            document.getElementById('tabThrottle').classList.toggle('active', which === 'throttle');
+            document.getElementById('screenDebounce').classList.toggle('active', which === 'debounce');
+            document.getElementById('screenThrottle').classList.toggle('active', which === 'throttle');
+        }
+
+        /* ════════════════════════════════════════════
+           DEBOUNCE — USE CASE 1: SEARCH
+        ════════════════════════════════════════════ */
+        let searchTimer = null;
+        let searchRawCount = 0, searchCallCount = 0;
+        const SEARCH_DELAY = 500;
+
+        function onSearchInput(val) {
+            searchRawCount++;
+            document.getElementById('searchRaw').textContent = searchRawCount;
+            document.getElementById('searchSaved').textContent = Math.max(0, searchRawCount - searchCallCount);
+
+            // Reset & restart debounce progress
+            resetProg(document.getElementById('searchFill'));
+            clearTimeout(searchTimer);
+            startProg(document.getElementById('searchFill'), SEARCH_DELAY, 'purple');
+
+            searchTimer = setTimeout(() => {
+                if (!val.trim()) return;
+                searchCallCount++;
+                document.getElementById('searchCalls').textContent = searchCallCount;
+                document.getElementById('searchSaved').textContent = Math.max(0, searchRawCount - searchCallCount);
+                addLogPill(document.getElementById('searchLog'), 'purple', '📡', `GET /search?q="${val.slice(0, 12)}" @ ${ts()}`);
+            }, SEARCH_DELAY);
+        }
+
+        function resetSearch() {
+            clearTimeout(searchTimer);
+            resetProg(document.getElementById('searchFill'));
+            searchRawCount = searchCallCount = 0;
+            document.getElementById('searchRaw').textContent = '0';
+            document.getElementById('searchCalls').textContent = '0';
+            document.getElementById('searchSaved').textContent = '0';
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchLog').innerHTML = '';
+        }
+
+        /* ════════════════════════════════════════════
+           DEBOUNCE — USE CASE 2: EMAIL VALIDATION
+        ════════════════════════════════════════════ */
+        let emailTimer = null;
+        let emailRaw = 0, emailChecks = 0;
+        const EMAIL_DELAY = 600;
+
+        function onEmailInput(val) {
+            emailRaw++;
+            document.getElementById('emailRaw').textContent = emailRaw;
+            document.getElementById('emailMsg').className = 'validation-msg check';
+            document.getElementById('emailMsg').textContent = '⏳ Validating after you stop typing…';
+            document.getElementById('emailStatus').textContent = '⏳';
+
+            resetProg(document.getElementById('emailFill'));
+            clearTimeout(emailTimer);
+            startProg(document.getElementById('emailFill'), EMAIL_DELAY, 'purple');
+
+            emailTimer = setTimeout(() => {
+                emailChecks++;
+                document.getElementById('emailChecks').textContent = emailChecks;
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const msgEl = document.getElementById('emailMsg');
+                const statusEl = document.getElementById('emailStatus');
+                if (!val.trim()) {
+                    msgEl.className = 'validation-msg';
+                    msgEl.textContent = 'Start typing your email…';
+                    statusEl.textContent = '⏳';
+                } else if (emailRegex.test(val)) {
+                    msgEl.className = 'validation-msg ok';
+                    msgEl.textContent = '✅ Valid email address!';
+                    statusEl.textContent = '✅';
+                } else {
+                    msgEl.className = 'validation-msg error';
+                    msgEl.textContent = '❌ Invalid email format';
+                    statusEl.textContent = '❌';
+                }
+            }, EMAIL_DELAY);
+        }
+
+        function resetEmail() {
+            clearTimeout(emailTimer);
+            resetProg(document.getElementById('emailFill'));
+            emailRaw = emailChecks = 0;
+            document.getElementById('emailRaw').textContent = '0';
+            document.getElementById('emailChecks').textContent = '0';
+            document.getElementById('emailStatus').textContent = '⏳';
+            document.getElementById('emailInput').value = '';
+            document.getElementById('emailMsg').className = 'validation-msg';
+            document.getElementById('emailMsg').textContent = 'Start typing your email…';
+        }
+
+        /* ════════════════════════════════════════════
+           THROTTLE — USE CASE 1: SCROLL TRACKER
+        ════════════════════════════════════════════ */
+        let scrollThrottleReady = true;
+        let scrollRaw = 0, scrollFired = 0;
+        const SCROLL_LIMIT = 500;
+        let scrollThrottleTimer = null;
+
+        function onScrollMove(e) {
+            const sim = document.getElementById('scrollSim');
+            const rect = sim.getBoundingClientRect();
+            const pct = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100));
+            document.getElementById('scrollIndicator').style.top = pct + '%';
+
+            scrollRaw++;
+            document.getElementById('scrollRaw').textContent = scrollRaw;
+            document.getElementById('scrollSaved').textContent = scrollRaw - scrollFired;
+
+            if (scrollThrottleReady) {
+                scrollThrottleReady = false;
+                scrollFired++;
+                document.getElementById('scrollCalls').textContent = scrollFired;
+                document.getElementById('scrollSaved').textContent = scrollRaw - scrollFired;
+                addLogPill(document.getElementById('scrollLog'), 'cyan', '📍', `scrollY: ${Math.round(pct)}% @ ${ts()}`);
+                startProg(document.getElementById('scrollFill'), SCROLL_LIMIT, 'cyan');
+
+                if (scrollThrottleTimer) clearTimeout(scrollThrottleTimer);
+                scrollThrottleTimer = setTimeout(() => {
+                    scrollThrottleReady = true;
+                    resetProg(document.getElementById('scrollFill'));
+                }, SCROLL_LIMIT);
+            }
+        }
+
+        function onScrollTouch(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            onScrollMove({ clientY: touch.clientY });
+        }
+
+        function resetScroll() {
+            clearTimeout(scrollThrottleTimer);
+            resetProg(document.getElementById('scrollFill'));
+            scrollThrottleReady = true;
+            scrollRaw = scrollFired = 0;
+            document.getElementById('scrollRaw').textContent = '0';
+            document.getElementById('scrollCalls').textContent = '0';
+            document.getElementById('scrollSaved').textContent = '0';
+            document.getElementById('scrollIndicator').style.top = '0';
+            document.getElementById('scrollLog').innerHTML = '';
+        }
+
+        /* ════════════════════════════════════════════
+           THROTTLE — USE CASE 2: NOTIFY BUTTON
+        ════════════════════════════════════════════ */
+        let notifyReady = true;
+        let notifyRaw = 0, notifySent = 0, notifyBlocked = 0;
+        const NOTIFY_LIMIT = 2000;
+        let notifyFillTimer = null;
+        let notifyReadyTimer = null;
+
+        function onNotifyClick() {
+            notifyRaw++;
+            document.getElementById('notifyRaw').textContent = notifyRaw;
+
+            if (notifyReady) {
+                notifyReady = false;
+                notifySent++;
+                document.getElementById('notifySent').textContent = notifySent;
+
+                const btn = document.getElementById('notifyBtn');
+                const statusEl = document.getElementById('notifyStatus');
+                btn.style.opacity = '0.5';
+                btn.style.cursor = 'not-allowed';
+                document.getElementById('notifyBtnIcon').textContent = '✅';
+
+                statusEl.className = 'status-badge blocked';
+                statusEl.innerHTML = '<span class="status-dot"></span> Cooldown (2s)…';
+
+                addLogPill(document.getElementById('notifyLog'), 'cyan', '🔔', `Notification sent! @ ${ts()}`);
+                startProg(document.getElementById('notifyFill'), NOTIFY_LIMIT, 'cyan');
+
+                if (notifyReadyTimer) clearTimeout(notifyReadyTimer);
+                notifyReadyTimer = setTimeout(() => {
+                    notifyReady = true;
+                    btn.style.opacity = '1';
+                    btn.style.cursor = 'pointer';
+                    document.getElementById('notifyBtnIcon').textContent = '🔔';
+                    statusEl.className = 'status-badge active';
+                    statusEl.innerHTML = '<span class="status-dot"></span> Ready to send';
+                    resetProg(document.getElementById('notifyFill'));
+                }, NOTIFY_LIMIT);
+            } else {
+                notifyBlocked++;
+                document.getElementById('notifyBlocked').textContent = notifyBlocked;
+                addLogPill(document.getElementById('notifyLog'), 'raw', '🚫', `Blocked (cooldown) @ ${ts()}`);
+                // Shake button
+                const btn = document.getElementById('notifyBtn');
+                btn.style.transform = 'translateX(-4px)';
+                setTimeout(() => { btn.style.transform = 'translateX(4px)'; }, 80);
+                setTimeout(() => { btn.style.transform = 'translateX(0)'; }, 160);
+            }
+        }
+
+        function resetNotify() {
+            clearTimeout(notifyReadyTimer);
+            if (notifyFillTimer) clearInterval(notifyFillTimer);
+            resetProg(document.getElementById('notifyFill'));
+            notifyReady = true;
+            notifyRaw = notifySent = notifyBlocked = 0;
+            document.getElementById('notifyRaw').textContent = '0';
+            document.getElementById('notifySent').textContent = '0';
+            document.getElementById('notifyBlocked').textContent = '0';
+            document.getElementById('notifyLog').innerHTML = '';
+            const btn = document.getElementById('notifyBtn');
+            btn.style.opacity = '1';
+            btn.style.cursor = 'pointer';
+            document.getElementById('notifyBtnIcon').textContent = '🔔';
+            document.getElementById('notifyStatus').className = 'status-badge idle';
+            document.getElementById('notifyStatus').innerHTML = '<span class="status-dot"></span> Ready to send';
+        }
+
+    </script>
+</body>
+
+</html>

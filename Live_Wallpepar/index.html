@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avinash Live Wallpaper — Year Progress</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+    <!-- Animated particle background -->
+    <canvas id="particles"></canvas>
+
+    <!-- Main dashboard wrapper -->
+    <div class="dashboard">
+
+        <!-- Header -->
+        <header class="header">
+            <h1 class="title"><span class="year-label" id="yearLabel"></span> PROGRESS TRACKER</h1>
+            <p class="subtitle" id="currentDate"></p>
+        </header>
+
+        <!-- Center: Progress Ring -->
+        <div class="ring-section">
+            <div class="ring-container">
+                <svg class="progress-ring" viewBox="0 0 260 260">
+                    <!-- Track -->
+                    <circle class="ring-track" cx="130" cy="130" r="115" />
+                    <!-- Progress arc -->
+                    <circle class="ring-progress" id="ringProgress" cx="130" cy="130" r="115" />
+                    <!-- Glow duplicate -->
+                    <circle class="ring-glow" id="ringGlow" cx="130" cy="130" r="115" />
+                </svg>
+                <div class="ring-label">
+                    <span class="ring-percent" id="ringPercent">0.000</span>
+                    <span class="ring-unit">%</span>
+                    <span class="ring-sub">YEAR COMPLETE</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stat cards grid -->
+        <div class="stats-grid">
+            <div class="card">
+                <div class="card-icon">⏱</div>
+                <div class="card-value" id="secondsPassed">0</div>
+                <div class="card-label">SECONDS PASSED</div>
+            </div>
+            <div class="card">
+                <div class="card-icon">🕐</div>
+                <div class="card-value" id="minutesPassed">0</div>
+                <div class="card-label">MINUTES PASSED</div>
+            </div>
+            <div class="card">
+                <div class="card-icon">⏳</div>
+                <div class="card-value" id="hoursPassed">0</div>
+                <div class="card-label">HOURS PASSED</div>
+            </div>
+            <div class="card">
+                <div class="card-icon">📅</div>
+                <div class="card-value" id="daysPassed">0</div>
+                <div class="card-label">DAYS PASSED</div>
+            </div>
+            <div class="card">
+                <div class="card-icon">📆</div>
+                <div class="card-value" id="weeksPassed">0</div>
+                <div class="card-label">WEEKS PASSED</div>
+            </div>
+            <div class="card">
+                <div class="card-icon">🗓</div>
+                <div class="card-value" id="monthsPassed">0</div>
+                <div class="card-label">MONTHS PASSED</div>
+            </div>
+        </div>
+
+        <!-- Countdown section -->
+        <div class="countdown-section">
+            <h2 class="countdown-title">TIME REMAINING IN <span id="countdownYear"></span></h2>
+            <div class="countdown-grid">
+                <div class="countdown-unit">
+                    <span class="cd-value" id="cdDays">000</span>
+                    <span class="cd-label">DAYS</span>
+                </div>
+                <div class="countdown-sep">:</div>
+                <div class="countdown-unit">
+                    <span class="cd-value" id="cdHours">00</span>
+                    <span class="cd-label">HOURS</span>
+                </div>
+                <div class="countdown-sep">:</div>
+                <div class="countdown-unit">
+                    <span class="cd-value" id="cdMinutes">00</span>
+                    <span class="cd-label">MINS</span>
+                </div>
+                <div class="countdown-sep">:</div>
+                <div class="countdown-unit">
+                    <span class="cd-value" id="cdSeconds">00</span>
+                    <span class="cd-label">SECS</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+</html>

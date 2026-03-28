@@ -1,0 +1,34 @@
+{
+  "name": "electron-starter",
+  "version": "1.0.0",
+  "description": "A simple Electron JS desktop app - starter project",
+  "main": "main.js",
+ "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win"
+  },
+  "build": {
+    "appId": "com.Avinash.electronstarter",
+    "productName": "Electron Starter",
+    "directories": { "output": "dist" },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    }
+  },
+  "keywords": ["electron", "desktop", "starter"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^24.0.0"
+  }
+}

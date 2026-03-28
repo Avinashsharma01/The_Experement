@@ -1,0 +1,22 @@
+{
+  "name": "clone_of_avinash",
+  "version": "1.0.0",
+  "description": "Away assistant Telegram bot for Clone_Of_Avinash",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "express": "^4.22.1",
+    "node-telegram-bot-api": "^0.67.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}

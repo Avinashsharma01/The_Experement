@@ -1,0 +1,25 @@
+DEFINITION OF ARTIFICIAL INTELLIGENCE (AI)
+==========================================
+
+Artificial Intelligence (AI) refers to the simulation of human intelligence processes by computer systems. These processes include learning, reasoning, problem-solving, perception, and language understanding.
+
+KEY CHARACTERISTICS:
+- Machine Learning: Systems that improve performance through experience and data
+- Automation: Performing tasks without explicit human instruction for each action
+- Adaptation: Ability to adjust behavior based on new information or feedback
+- Intelligence: Capability to understand context, make decisions, and solve problems
+
+MAIN CATEGORIES:
+1. Narrow AI (Weak AI): Designed for specific tasks (most current AI systems)
+2. General AI (Strong AI): Hypothetical AI with human-level intelligence across domains
+3. Super AI (ASI): Theoretical AI exceeding human intelligence
+
+COMMON APPLICATIONS:
+- Natural Language Processing (chatbots, translation)
+- Computer Vision (image recognition, object detection)
+- Recommendation Systems (personalized suggestions)
+- Autonomous Systems (self-driving cars, robotics)
+- Data Analysis and Prediction
+- Virtual Assistants and Search Engines
+
+AI is transforming industries and society by automating complex tasks, providing insights from data, and enabling new forms of human-computer interaction.

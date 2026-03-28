@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avinash Sharma</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Animated background layers -->
+  <div class="bg-grid"></div>
+  <div class="bg-gradient"></div>
+  <canvas id="particles"></canvas>
+
+  <!-- Main dashboard container -->
+  <div class="dashboard">
+
+    <!-- Header -->
+    <header class="header">
+      <h1 class="title">YEAR PROGRESS <span class="accent">DASHBOARD</span></h1>
+      <p class="subtitle" id="currentDate"></p>
+    </header>
+
+    <!-- Center hero: Ring + Metrics side by side -->
+    <section class="hero">
+
+      <!-- Left: Circular progress ring -->
+      <div class="ring-side">
+        <div class="ring-container">
+          <svg class="progress-svg" viewBox="0 0 260 260">
+            <defs>
+              <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#00f0ff" />
+                <stop offset="50%" stop-color="#b000ff" />
+                <stop offset="100%" stop-color="#ff00aa" />
+              </linearGradient>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                <feMerge>
+                  <feMergeNode in="coloredBlur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+            <circle class="ring-bg" cx="130" cy="130" r="115" />
+            <circle class="ring-progress" id="ringProgress" cx="130" cy="130" r="115" />
+          </svg>
+          <div class="ring-label">
+            <span class="ring-percent" id="yearPercent">0.000</span>
+            <span class="ring-unit">% COMPLETE</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Metrics grid -->
+      <div class="metrics-grid">
+        <div class="metric-card" data-metric="months">
+          <div class="metric-icon">&#9783;</div>
+          <div class="metric-value" id="monthsPassed">0</div>
+          <div class="metric-label">Months Passed</div>
+          <div class="metric-bar"><div class="metric-fill" id="monthsBar"></div></div>
+        </div>
+        <div class="metric-card" data-metric="weeks">
+          <div class="metric-icon">&#9878;</div>
+          <div class="metric-value" id="weeksPassed">0</div>
+          <div class="metric-label">Weeks Passed</div>
+          <div class="metric-bar"><div class="metric-fill" id="weeksBar"></div></div>
+        </div>
+        <div class="metric-card" data-metric="days">
+          <div class="metric-icon">&#9788;</div>
+          <div class="metric-value" id="daysPassed">0</div>
+          <div class="metric-label">Days Passed</div>
+          <div class="metric-bar"><div class="metric-fill" id="daysBar"></div></div>
+        </div>
+        <div class="metric-card" data-metric="hours">
+          <div class="metric-icon">&#9201;</div>
+          <div class="metric-value" id="hoursPassed">0</div>
+          <div class="metric-label">Hours Passed</div>
+          <div class="metric-bar"><div class="metric-fill" id="hoursBar"></div></div>
+        </div>
+        <div class="metric-card" data-metric="minutes">
+          <div class="metric-icon">&#9202;</div>
+          <div class="metric-value" id="minutesPassed">0</div>
+          <div class="metric-label">Minutes Passed</div>
+          <div class="metric-bar"><div class="metric-fill" id="minutesBar"></div></div>
+        </div>
+        <div class="metric-card" data-metric="seconds">
+          <div class="metric-icon">&#9203;</div>
+          <div class="metric-value" id="secondsPassed">0</div>
+          <div class="metric-label">Seconds Passed</div>
+          <div class="metric-bar"><div class="metric-fill" id="secondsBar"></div></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Countdown timer -->
+    <section class="countdown-section">
+      <h2 class="countdown-title">TIME REMAINING IN <span class="accent" id="countdownYear">2026</span></h2>
+      <div class="countdown-grid">
+        <div class="countdown-unit">
+          <span class="cd-value" id="cdDays">000</span>
+          <span class="cd-label">DAYS</span>
+        </div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit">
+          <span class="cd-value" id="cdHours">00</span>
+          <span class="cd-label">HOURS</span>
+        </div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit">
+          <span class="cd-value" id="cdMinutes">00</span>
+          <span class="cd-label">MINUTES</span>
+        </div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit">
+          <span class="cd-value" id="cdSeconds">00</span>
+          <span class="cd-label">SECONDS</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

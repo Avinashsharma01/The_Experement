@@ -1,0 +1,229 @@
+{
+  "name": "🚀 Avinash Resume Tailor (Ollama + Mistral)",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Resume Tailor – Avinash Sharma",
+        "formDescription": "Paste the job role and description below. Mistral AI will tailor your resume instantly!",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Job Role / Title",
+              "placeholder": "e.g. Senior Full-Stack Developer, React Native Engineer, Backend Developer",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Job Description",
+              "fieldType": "textarea",
+              "placeholder": "Paste the full job description here...",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Output Format",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  { "option": "Markdown (Readable)" },
+                  { "option": "Plain Text (ATS-Friendly)" }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.1,
+      "position": [240, 300],
+      "id": "node-form-trigger",
+      "name": "📋 Job Details Form",
+      "webhookId": "avinash-resume-tailor-ollama-001"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "base-resume",
+              "name": "baseResume",
+              "value": "AVINASH SHARMA\nPhone: +91 6201693634\nEmail: avinashsharma31384@gmail.com\nGitHub: github.com/[your-github]\nLinkedIn: linkedin.com/in/[your-linkedin]\nPortfolio: [your-portfolio-url]\nLocation: Meerut, Uttar Pradesh, 250005, India\n\n─────────────────────────────────────\nSUMMARY\n─────────────────────────────────────\nFull-Stack Developer with 2 internships building production web and mobile applications using MERN stack. Delivered 5+ projects including an Institute ERP with role-based access control and a course selling platform with secure authentication. Core strengths: Node.js/Express APIs, MongoDB, React.js, JWT authentication, and REST API design.\n\n─────────────────────────────────────\nTECHNICAL SKILLS\n─────────────────────────────────────\nProgramming Languages: Java, JavaScript (ES6+), TypeScript\nFrontend: React.js, Next.js, Tailwind CSS, HTML5, CSS3\nBackend: Node.js, Express.js, MongoDB (Mongoose), REST APIs, JWT Authentication, Socket.IO\nCloud and Tools: Firebase, Cloudinary, Git, Docker, Postman, VS Code\nSystems & CS Fundamentals: Data Structures and Algorithms, OOP, DBMS, Operating Systems\n\n─────────────────────────────────────\nEXPERIENCE\n─────────────────────────────────────\nEpiCircle | Remote Full Stack Developer (React Native) | July 2025 – Present\n- Developed scrap collection module in production React Native app, enabling real-time pickup scheduling and tracking.\n- Refactored 15+ components improving code reusability; resolved 10+ production issues from user feedback.\n\nIdeovent Technologies | Remote Software Developer Intern (Team Lead) | June 2025 – Sep 2025\n- Led 4-person intern team to deliver 2 full-stack web applications within a 3-month deadline.\n- Designed RESTful APIs with JWT-based authentication, balancing stateless security with frontend session persistence and role-based UI rendering.\n- Built responsive frontend with React.js and Tailwind CSS; conducted 25+ code reviews.\n\n─────────────────────────────────────\nPROJECTS\n─────────────────────────────────────\nInstitute ERP System | React (TypeScript), Node.js, MongoDB | GitHub\n- Designed institute management platform with Role-Based Access Control (RBAC) for Admins, Teachers, and Students.\n- Designed an end-to-end ERP system where frontend role-based dashboards were tightly coupled with backend RBAC middleware, ensuring authorization consistency across UI and APIs.\n\nCourse Selling Platform | MERN Stack, JWT, Rate Limiting | GitHub\n- Built e-learning marketplace with 3-tier access control (Student, Admin, SuperAdmin) for secure course management.\n- Implemented API rate limiting and JWT authentication middleware to prevent DDoS and ensure secure sessions.\n\nAcademic Notes Manager | MERN Stack, Cloudinary | GitHub\n- Built a centralized academic repository enabling students to securely browse, search, and download course materials using role-based access control and Cloudinary-backed storage.\n\nPet Adoption Platform | React, Firebase (Firestore/Auth), React Hook Form | GitHub\n- Built serverless adoption portal using Firebase for authentication and Firestore for real-time data synchronization.\n\n─────────────────────────────────────\nEDUCATION\n─────────────────────────────────────\nBachelor of Technology (B.Tech) in Information Technology | CGPA: 8.44 | 2022 – 2026\nSwami Vivekanand Subharti University, Meerut\n\n─────────────────────────────────────\nCERTIFICATIONS\n─────────────────────────────────────\n- DSA with Java – NPTEL (2023)\n- Java Programming – NPTEL (2024)\n- Cloud Computing – NPTEL (2025)",
+              "type": "string"
+            },
+            {
+              "id": "job-role",
+              "name": "jobRole",
+              "value": "={{ $json['Job Role / Title'] }}",
+              "type": "string"
+            },
+            {
+              "id": "job-desc",
+              "name": "jobDescription",
+              "value": "={{ $json['Job Description'] }}",
+              "type": "string"
+            },
+            {
+              "id": "output-format",
+              "name": "outputFormat",
+              "value": "={{ $json['Output Format'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [480, 300],
+      "id": "node-set-resume",
+      "name": "📄 Load Real Resume"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "full-prompt",
+              "name": "fullPrompt",
+              "value": "=You are an expert resume writer and ATS optimization specialist.\n\nYour task is to tailor the candidate's resume to perfectly match the given job role and job description.\n\nSTRICT RULES:\n1. NEVER invent any new experience, skills, or projects not already in the resume.\n2. Reorder and reframe existing bullet points to highlight what is MOST relevant to the job.\n3. Mirror exact keywords and technologies from the job description wherever they genuinely match.\n4. Rewrite the Summary section to be laser-targeted to this specific job role.\n5. Keep all real facts (company names, dates, CGPA, certifications) exactly as they are.\n6. Make bullet points stronger using action verbs and quantified results where possible.\n7. If output format is Markdown: use proper headers (##), bold (**text**), and bullet points (-).\n8. If output format is Plain Text: use ASCII separators (---) and no markdown symbols.\n9. After the resume, add a section called TAILORING NOTES listing 3-5 key changes you made and why.\n\n--- JOB ROLE ---\n{{ $json.jobRole }}\n\n--- JOB DESCRIPTION ---\n{{ $json.jobDescription }}\n\n--- CANDIDATE BASE RESUME ---\n{{ $json.baseResume }}\n\n--- OUTPUT FORMAT ---\n{{ $json.outputFormat }}\n\nNow produce the fully tailored resume followed by TAILORING NOTES:",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [720, 300],
+      "id": "node-build-prompt",
+      "name": "🧠 Build Mistral Prompt"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $vars.OLLAMA_BASE_URL || 'http://localhost:11434' }}/api/generate",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "body": {
+          "model": "mistral",
+          "prompt": "={{ $json.fullPrompt }}",
+          "stream": false,
+          "options": {
+            "temperature": 0.3,
+            "num_predict": 3000,
+            "top_p": 0.9
+          }
+        },
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [960, 300],
+      "id": "node-ollama-mistral",
+      "name": "🤖 Ollama – Mistral LLM"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "tailored-resume",
+              "name": "tailoredResume",
+              "value": "={{ $json.response }}",
+              "type": "string"
+            },
+            {
+              "id": "job-role-echo",
+              "name": "jobRoleEcho",
+              "value": "={{ $('📄 Load Real Resume').item.json.jobRole }}",
+              "type": "string"
+            },
+            {
+              "id": "model-used",
+              "name": "modelUsed",
+              "value": "={{ $json.model }}",
+              "type": "string"
+            },
+            {
+              "id": "eval-duration",
+              "name": "evalDuration",
+              "value": "={{ Math.round($json.eval_duration / 1e9) }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1200, 300],
+      "id": "node-extract-result",
+      "name": "✅ Extract Mistral Result"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "=<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Tailored Resume – {{ $json.jobRoleEcho }}</title>\n  <style>\n    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }\n    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0d1117; color: #c9d1d9; min-height: 100vh; }\n\n    /* Header */\n    .header {\n      background: linear-gradient(135deg, #1a1f2e 0%, #16213e 50%, #0f3460 100%);\n      border-bottom: 1px solid #30363d;\n      padding: 28px 40px;\n      display: flex;\n      align-items: center;\n      gap: 20px;\n    }\n    .header-icon { font-size: 36px; }\n    .header-title { font-size: 22px; font-weight: 700; color: #f0f6fc; }\n    .header-sub { font-size: 13px; color: #8b949e; margin-top: 4px; }\n    .badge-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }\n    .badge {\n      display: inline-flex; align-items: center; gap: 5px;\n      padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;\n    }\n    .badge-green  { background: #1a4731; color: #3fb950; border: 1px solid #238636; }\n    .badge-blue   { background: #1c2d50; color: #79c0ff; border: 1px solid #1f6feb; }\n    .badge-purple { background: #2d1b69; color: #d2a8ff; border: 1px solid #6e40c9; }\n    .badge-orange { background: #3d2200; color: #ffa657; border: 1px solid #9e6a03; }\n\n    /* Main layout */\n    .container { max-width: 960px; margin: 32px auto; padding: 0 24px 60px; }\n\n    /* Stats bar */\n    .stats-bar {\n      display: grid;\n      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));\n      gap: 12px;\n      margin-bottom: 24px;\n    }\n    .stat-card {\n      background: #161b22;\n      border: 1px solid #30363d;\n      border-radius: 8px;\n      padding: 14px 18px;\n    }\n    .stat-label { font-size: 11px; color: #8b949e; text-transform: uppercase; letter-spacing: 0.8px; }\n    .stat-value { font-size: 16px; font-weight: 700; color: #f0f6fc; margin-top: 4px; }\n\n    /* Toolbar */\n    .toolbar {\n      display: flex;\n      justify-content: space-between;\n      align-items: center;\n      background: #161b22;\n      border: 1px solid #30363d;\n      border-radius: 8px 8px 0 0;\n      padding: 12px 20px;\n    }\n    .toolbar-title { font-size: 13px; font-weight: 600; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; }\n    .btn-row { display: flex; gap: 8px; }\n    .btn {\n      padding: 6px 14px; border-radius: 6px; border: 1px solid;\n      font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s;\n    }\n    .btn-copy  { background: #21262d; color: #79c0ff; border-color: #30363d; }\n    .btn-copy:hover  { background: #30363d; }\n    .btn-print { background: #238636; color: #fff;    border-color: #2ea043; }\n    .btn-print:hover { background: #2ea043; }\n\n    /* Resume box */\n    .resume-box {\n      background: #0d1117;\n      border: 1px solid #30363d;\n      border-top: none;\n      border-radius: 0 0 8px 8px;\n      padding: 32px 36px;\n    }\n    .resume-content {\n      font-family: 'Courier New', Courier, monospace;\n      font-size: 13.2px;\n      line-height: 1.85;\n      white-space: pre-wrap;\n      word-break: break-word;\n      color: #e6edf3;\n    }\n\n    /* Tips card */\n    .tips-card {\n      background: #161b22;\n      border: 1px solid #30363d;\n      border-left: 3px solid #3fb950;\n      border-radius: 8px;\n      padding: 18px 22px;\n      margin-top: 20px;\n      font-size: 13px;\n      color: #8b949e;\n      line-height: 1.7;\n    }\n    .tips-card strong { color: #f0f6fc; }\n\n    /* Footer */\n    footer {\n      text-align: center;\n      padding: 24px;\n      color: #484f58;\n      font-size: 12px;\n      margin-top: 20px;\n    }\n\n    @media print {\n      body { background: white; color: black; }\n      .header, .stats-bar, .toolbar, .tips-card, footer { display: none; }\n      .resume-box { border: none; padding: 0; }\n      .resume-content { color: black; font-size: 12px; }\n    }\n  </style>\n</head>\n<body>\n\n  <div class=\"header\">\n    <div class=\"header-icon\">✨</div>\n    <div>\n      <div class=\"header-title\">Resume Tailored Successfully</div>\n      <div class=\"header-sub\">Role: <strong style=\"color:#79c0ff\">{{ $json.jobRoleEcho }}</strong></div>\n      <div class=\"badge-row\">\n        <span class=\"badge badge-green\">✅ Done</span>\n        <span class=\"badge badge-purple\">🤖 Mistral via Ollama</span>\n        <span class=\"badge badge-blue\">⚡ Local AI – 100% Private</span>\n        <span class=\"badge badge-orange\">⏱ {{ $json.evalDuration }}s generation</span>\n      </div>\n    </div>\n  </div>\n\n  <div class=\"container\">\n\n    <div class=\"stats-bar\">\n      <div class=\"stat-card\">\n        <div class=\"stat-label\">Model</div>\n        <div class=\"stat-value\">{{ $json.modelUsed }}</div>\n      </div>\n      <div class=\"stat-card\">\n        <div class=\"stat-label\">Target Role</div>\n        <div class=\"stat-value\" style=\"font-size:13px\">{{ $json.jobRoleEcho }}</div>\n      </div>\n      <div class=\"stat-card\">\n        <div class=\"stat-label\">Generation Time</div>\n        <div class=\"stat-value\">{{ $json.evalDuration }}s</div>\n      </div>\n      <div class=\"stat-card\">\n        <div class=\"stat-label\">Privacy</div>\n        <div class=\"stat-value\" style=\"color:#3fb950\">100% Local</div>\n      </div>\n    </div>\n\n    <div class=\"toolbar\">\n      <span class=\"toolbar-title\">📄 Your Tailored Resume</span>\n      <div class=\"btn-row\">\n        <button class=\"btn btn-copy\" onclick=\"copyResume()\">📋 Copy Text</button>\n        <button class=\"btn btn-print\" onclick=\"window.print()\">🖨 Print / Save PDF</button>\n      </div>\n    </div>\n    <div class=\"resume-box\">\n      <div class=\"resume-content\" id=\"resumeText\">{{ $json.tailoredResume }}</div>\n    </div>\n\n    <div class=\"tips-card\">\n      <strong>💡 Next Steps:</strong><br>\n      1. Review the <strong>TAILORING NOTES</strong> section at the bottom of the resume above.<br>\n      2. Click <strong>Print / Save PDF</strong> to export a clean ATS-ready PDF.<br>\n      3. Double-check GitHub/LinkedIn links before submitting.<br>\n      4. Run it through <strong>jobscan.co</strong> to verify ATS keyword score.\n    </div>\n\n  </div>\n\n  <footer>Avinash Resume Tailor • Powered by Mistral via Ollama • 100% Local & Private • n8n Workflow</footer>\n\n  <script>\n    function copyResume() {\n      const text = document.getElementById('resumeText').innerText;\n      navigator.clipboard.writeText(text).then(() => {\n        const btn = document.querySelector('.btn-copy');\n        btn.textContent = '✅ Copied!';\n        setTimeout(() => btn.textContent = '📋 Copy Text', 2500);\n      });\n    }\n  </script>\n\n</body>\n</html>",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/html; charset=utf-8"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1440, 300],
+      "id": "node-respond",
+      "name": "🌐 Return Tailored Resume"
+    }
+  ],
+  "connections": {
+    "📋 Job Details Form": {
+      "main": [[{ "node": "📄 Load Real Resume", "type": "main", "index": 0 }]]
+    },
+    "📄 Load Real Resume": {
+      "main": [[{ "node": "🧠 Build Mistral Prompt", "type": "main", "index": 0 }]]
+    },
+    "🧠 Build Mistral Prompt": {
+      "main": [[{ "node": "🤖 Ollama – Mistral LLM", "type": "main", "index": 0 }]]
+    },
+    "🤖 Ollama – Mistral LLM": {
+      "main": [[{ "node": "✅ Extract Mistral Result", "type": "main", "index": 0 }]]
+    },
+    "✅ Extract Mistral Result": {
+      "main": [[{ "node": "🌐 Return Tailored Resume", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "avinash-resume-tailor-ollama-v1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "avinash-resume-ollama-workflow",
+  "tags": [
+    { "name": "resume" },
+    { "name": "ollama" },
+    { "name": "mistral" },
+    { "name": "local-ai" }
+  ]
+}

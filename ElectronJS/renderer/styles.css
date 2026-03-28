@@ -1,0 +1,258 @@
+/* ── Reset & Base ─────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #0f0f13;
+  --surface: #1a1a24;
+  --surface-hover: #22222e;
+  --border: #2a2a3a;
+  --text: #e4e4ef;
+  --text-muted: #8888a4;
+  --accent: #6c5ce7;
+  --accent-glow: #a29bfe;
+  --gradient: linear-gradient(135deg, #6c5ce7, #00cec9);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── App Container ───────────────────────────────────────────── */
+.app {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 24px 28px 40px;
+}
+
+/* ── Header ──────────────────────────────────────────────────── */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 36px;
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.badge {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: var(--gradient);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+/* ── Hero ────────────────────────────────────────────────────── */
+.hero {
+  text-align: center;
+  padding: 32px 0 40px;
+}
+
+.hero h1 {
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 12px;
+}
+
+.gradient-text {
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ── Cards ───────────────────────────────────────────────────── */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px;
+  margin-bottom: 40px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 16px;
+  text-align: center;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+}
+
+.card-icon {
+  font-size: 1.6rem;
+  margin-bottom: 8px;
+}
+
+.card-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.card-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent-glow);
+}
+
+/* ── Interactive Section ─────────────────────────────────────── */
+.interactive,
+.counter-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 24px;
+}
+
+.interactive h2,
+.counter-section h2 {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+.interactive p,
+.counter-section p {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  margin-bottom: 18px;
+}
+
+.input-group {
+  display: flex;
+  gap: 10px;
+}
+
+.input-group input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  color: var(--text);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-group input:focus {
+  border-color: var(--accent);
+}
+
+.input-group button,
+#send-btn {
+  background: var(--gradient);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 10px 20px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+
+.input-group button:hover {
+  opacity: 0.88;
+}
+
+.response {
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  min-height: 20px;
+  display: none;
+}
+
+.response.visible {
+  display: block;
+}
+
+/* ── Counter ─────────────────────────────────────────────────── */
+.counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.counter-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.counter-btn:hover {
+  border-color: var(--accent);
+  background: var(--surface-hover);
+}
+
+.counter-value {
+  font-size: 2.4rem;
+  font-weight: 800;
+  min-width: 80px;
+  text-align: center;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
+.footer {
+  text-align: center;
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}

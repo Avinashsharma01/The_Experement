@@ -1,0 +1,366 @@
+/* ===================================================
+   Year Progress Dashboard — Cyberpunk / Futuristic Theme
+   =================================================== */
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --cyan: #00f0ff;
+  --magenta: #ff00aa;
+  --purple: #b000ff;
+  --dark-bg: #0a0a12;
+  --card-bg: rgba(15, 15, 30, 0.6);
+  --card-border: rgba(0, 240, 255, 0.12);
+  --text-primary: #e0e6f0;
+  --text-secondary: #7a8ba8;
+  --ring-size: 220px;
+  --glow-cyan: 0 0 20px rgba(0, 240, 255, 0.35);
+  --glow-purple: 0 0 20px rgba(176, 0, 255, 0.35);
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Segoe UI', 'Inter', 'Roboto', Arial, sans-serif;
+  background: var(--dark-bg);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Animated Backgrounds ---------- */
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+.bg-gradient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 600px 600px at 15% 20%, rgba(0, 240, 255, 0.08), transparent),
+    radial-gradient(ellipse 500px 500px at 80% 75%, rgba(176, 0, 255, 0.08), transparent),
+    radial-gradient(ellipse 400px 400px at 50% 50%, rgba(255, 0, 170, 0.04), transparent);
+  animation: gradientShift 20s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes gradientShift {
+  0%   { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(30deg); }
+}
+
+#particles {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ---------- Dashboard Layout ---------- */
+.dashboard {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1000px;
+  height: 100vh;
+  margin: 0 auto;
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 28px;
+}
+
+/* ---------- Header ---------- */
+.header {
+  text-align: center;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.accent {
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  letter-spacing: 2px;
+}
+
+/* ---------- Hero: Ring + Metrics Side-by-Side ---------- */
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  width: 100%;
+}
+
+.ring-side {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ring-container {
+  position: relative;
+  width: var(--ring-size);
+  height: var(--ring-size);
+}
+
+.progress-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  filter: url(#glow);
+}
+
+.ring-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.04);
+  stroke-width: 10;
+}
+
+.ring-progress {
+  fill: none;
+  stroke: url(#ringGrad);
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-dasharray: 722.57;
+  stroke-dashoffset: 722.57;
+  transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ring-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.ring-percent {
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.ring-unit {
+  font-size: 0.6rem;
+  letter-spacing: 3px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* ---------- Metric Cards Grid ---------- */
+.metrics-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.metric-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 16px 14px 14px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyan), var(--purple), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(0, 240, 255, 0.25);
+  box-shadow: var(--glow-cyan);
+}
+
+.metric-card:hover::before {
+  opacity: 1;
+}
+
+.metric-icon {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+  opacity: 0.45;
+}
+
+.metric-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--cyan);
+  text-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+  font-variant-numeric: tabular-nums;
+}
+
+.metric-label {
+  font-size: 0.6rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.metric-bar {
+  margin-top: 10px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.metric-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  border-radius: 2px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------- Countdown Section ---------- */
+.countdown-section {
+  text-align: center;
+  width: 100%;
+}
+
+.countdown-title {
+  font-size: 0.8rem;
+  letter-spacing: 4px;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+
+.countdown-grid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.countdown-unit {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 14px 24px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  min-width: 100px;
+  text-align: center;
+  transition: box-shadow 0.3s ease;
+}
+
+.countdown-unit:hover {
+  box-shadow: var(--glow-purple);
+}
+
+.cd-value {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  background: linear-gradient(135deg, var(--cyan), var(--magenta));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-variant-numeric: tabular-nums;
+}
+
+.cd-label {
+  display: block;
+  font-size: 0.55rem;
+  letter-spacing: 3px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.countdown-sep {
+  font-size: 1.4rem;
+  color: rgba(255, 255, 255, 0.15);
+  font-weight: 300;
+  user-select: none;
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar { width: 0; height: 0; }
+
+/* ---------- Responsive ---------- */
+@media (max-height: 700px) {
+  .dashboard { gap: 16px; padding: 14px 24px; }
+  :root { --ring-size: 160px; }
+  .ring-percent { font-size: 1.8rem; }
+  .title { font-size: 1.2rem; }
+  .metric-card { padding: 10px 8px 10px; }
+  .metric-value { font-size: 1.15rem; }
+  .metric-icon { margin-bottom: 2px; }
+  .cd-value { font-size: 1.4rem; }
+  .countdown-unit { padding: 10px 18px; min-width: 80px; }
+  .countdown-title { margin-bottom: 8px; }
+}
+
+@media (max-width: 800px) {
+  .hero {
+    flex-direction: column;
+    gap: 20px;
+  }
+  :root { --ring-size: 160px; }
+  .metrics-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .title { font-size: 1.1rem; letter-spacing: 3px; }
+}
+
+@media (max-width: 480px) {
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+  .dashboard { padding: 10px 12px; gap: 14px; }
+  .countdown-unit { min-width: 60px; padding: 8px 12px; }
+  .cd-value { font-size: 1.2rem; }
+}

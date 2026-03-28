@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: clone-of-avinash-away-assistant
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    autoDeploy: true
+    envVars:
+      - key: USE_WEBHOOK
+        value: true
+      - key: TELEGRAM_WEBHOOK_PATH
+        value: /telegram/webhook

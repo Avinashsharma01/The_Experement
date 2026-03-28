@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Throttle Example</title>
+    <style>
+      body {
+        height: 2000px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Scroll down and watch console 👇</h2>
+    <button
+      id="throttleBtn"
+      style="margin-top: 16px; padding: 10px 14px; font-size: 14px"
+    >
+      Click me rapidly (throttled)
+    </button>
+
+    <script>
+      function throttle(func, delay) {
+        let lastCall = 0;
+
+        return function (...args) {
+          const now = Date.now();
+
+          if (now - lastCall >= delay) {
+            lastCall = now;
+            func.apply(this, args);
+          }
+        };
+      }
+
+      // Connects the throttle helper to the scroll event.
+      const throttledScroll = throttle(() => {
+        console.log("Throttled scroll position:", window.scrollY);
+      }, 200);
+
+      window.addEventListener("scroll", throttledScroll);
+
+      // Add a throttled click button to demonstrate click rate-limiting.
+      const btn = document.getElementById("throttleBtn");
+
+      const printData = () => {
+        console.log(
+          "Throttled button click @",
+          new Date().toLocaleTimeString(),
+        );
+      };
+
+      const throttledClick = throttle(printData, 2000);
+
+      btn.addEventListener("click", throttledClick);
+    </script>
+  </body>
+</html>
